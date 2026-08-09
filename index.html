@@ -341,7 +341,7 @@ function render(){
     <div class="card">
       <div class="card-top">
         <span class="index-no">No. ${String(i+1).padStart(3,'0')}</span>
-        <span class="status ${buka ? 'open':'closed'}">${p.Status || 'Pendaftaran Dibuka'}</span>
+        <span class="status ${buka ? 'open':'closed'}">${p.Status || 'Dibuka'}</span>
       </div>
       ${p.Kategori ? `<span class="kategori">${p.Kategori}</span>` : ''}
       <h3>${p.Nama || 'Tanpa nama'}</h3>
