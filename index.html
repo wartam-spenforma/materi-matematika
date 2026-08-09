@@ -10,9 +10,9 @@
   :root{
     --ink:#23222B;
     --ink-soft:#55535f;
-    --paper:#EFEDE6;
-    --card:#F8F7F2;
-    --line:#D8D2C2;
+    --paper: rgba(0, 102, 255, 0.12); /* Background biru transparan */
+    --card: #eaf2fd;
+    --line: #c8dadf;
     --gold:#C9962F;
     --gold-deep:#9c7422;
     --teal:#4F7B72;
@@ -202,7 +202,7 @@
   </div>
 </main>
 
-<footer>Data produk &amp; pendaftaran tersimpan di Google Sheets.</footer>
+<footer>Materi dan tautan tersimpan di Google Sheets</footer>
 
 <!-- Modal pendaftaran -->
 <div class="overlay" id="overlay">
@@ -352,8 +352,8 @@ function render(){
           : `<a class="btn btn-ghost" href="${p.Tautan || '#'}" target="_blank" rel="noopener">Buka Tautan</a>`
         }
         ${buka
-          ? `<button class="btn btn-solid" onclick="openModal('${(p.Nama||'').replace(/'/g,"\\'")}')">Daftar</button>`
-          : `<button class="btn btn-solid" disabled onclick="showClosedNotice()">Daftar</button>`
+          ? `<button class="btn btn-solid" onclick="openModal('${(p.Nama||'').replace(/'/g,"\\'")}')">Minta Akses</button>`
+          : `<button class="btn btn-solid" disabled onclick="showClosedNotice()">Minta Akses</button>`
         }
       </div>
     </div>`;
