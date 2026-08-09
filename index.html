@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Katalog Produk Digital</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#23222B;
+    --ink-soft:#55535f;
+    --paper:#EFEDE6;
+    --card:#F8F7F2;
+    --line:#D8D2C2;
+    --gold:#C9962F;
+    --gold-deep:#9c7422;
+    --teal:#4F7B72;
+    --teal-deep:#3a5c55;
+    --danger:#B4543C;
+    --radius:2px;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--paper);color:var(--ink);font-family:'Inter',sans-serif;-webkit-font-smoothing:antialiased;}
+  h1,h2,h3{font-family:'Fraunces',serif;font-weight:600;margin:0;}
+  .mono{font-family:'IBM Plex Mono',monospace;}
+
+  header{
+    padding:48px 32px 28px;
+    max-width:1100px;margin:0 auto;
+    border-bottom:1px solid var(--line);
+    display:flex;justify-content:space-between;align-items:flex-start;gap:20px;
+  }
+  .eyebrow{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:12px;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--teal-deep);margin-bottom:10px;
+  }
+  header h1{font-size:34px;letter-spacing:-.01em;}
+  header p{color:var(--ink-soft);margin-top:8px;font-size:15px;max-width:520px;line-height:1.5;}
+  .admin-link{
+    font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.04em;
+    color:var(--ink-soft);background:none;border:1px solid var(--line);
+    padding:8px 14px;border-radius:999px;cursor:pointer;white-space:nowrap;
+    flex-shrink:0;transition:all .15s;
+  }
+  .admin-link:hover{border-color:var(--teal);color:var(--ink);}
+
+  main{max-width:1100px;margin:0 auto;padding:28px 32px 80px;}
+
+  .toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:28px;}
+  .search{
+    flex:1;min-width:220px;
+    display:flex;align-items:center;gap:8px;
+    border:1px solid var(--line);background:var(--card);
+    border-radius:var(--radius);padding:10px 14px;
+  }
+  .search input{border:none;background:transparent;outline:none;font-size:14px;width:100%;font-family:'Inter',sans-serif;color:var(--ink);}
+  .search svg{flex-shrink:0;opacity:.5;}
+  .chip{
+    border:1px solid var(--line);background:var(--card);
+    padding:9px 15px;border-radius:999px;font-size:13px;cursor:pointer;
+    color:var(--ink-soft);white-space:nowrap;transition:all .15s;
+  }
+  .chip:hover{border-color:var(--teal);color:var(--ink);}
+  .chip.active{background:var(--teal);border-color:var(--teal);color:#fff;}
+
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:20px;}
+
+  .card{
+    position:relative;
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:22px 22px 20px;
+    display:flex;flex-direction:column;gap:12px;
+    transition:transform .18s ease, box-shadow .18s ease;
+  }
+  .card:hover{transform:translateY(-3px);box-shadow:0 10px 24px -14px rgba(35,34,43,.35);}
+  .card::before{
+    content:'';position:absolute;top:0;left:22px;right:22px;height:3px;
+    background:var(--gold);
+  }
+  .card-top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;}
+  .index-no{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--gold-deep);letter-spacing:.06em;}
+  .status{
+    font-size:11px;font-family:'IBM Plex Mono',monospace;letter-spacing:.05em;
+    padding:3px 9px;border-radius:999px;border:1px solid currentColor;
+  }
+  .status.open{color:var(--teal-deep);}
+  .status.closed{color:var(--ink-soft);}
+
+  .card h3{font-size:19px;line-height:1.28;}
+  .card .desc{font-size:13.5px;color:var(--ink-soft);line-height:1.55;flex:1;}
+  .kategori{font-size:11px;font-family:'IBM Plex Mono',monospace;color:var(--teal-deep);text-transform:uppercase;letter-spacing:.05em;}
+
+  .card-actions{display:flex;gap:8px;margin-top:4px;}
+  .btn{
+    font-family:'Inter',sans-serif;font-weight:600;font-size:13px;
+    border-radius:var(--radius);padding:10px 14px;cursor:pointer;border:1px solid transparent;
+    text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:6px;
+    flex:1;transition:opacity .15s;
+  }
+  .btn:hover{opacity:.85;}
+  .btn-ghost{background:transparent;border-color:var(--line);color:var(--ink);}
+  .btn-solid{background:var(--ink);color:#fff;}
+  .btn-solid:disabled{background:var(--line);color:var(--ink-soft);cursor:not-allowed;}
+  .btn-danger{background:transparent;border-color:var(--danger);color:var(--danger);}
+
+  /* states */
+  .state{text-align:center;padding:70px 20px;color:var(--ink-soft);}
+  .state h3{font-size:18px;margin-bottom:6px;color:var(--ink);}
+  .state p{font-size:14px;max-width:400px;margin:0 auto;line-height:1.6;}
+  .skeleton{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);height:210px;position:relative;overflow:hidden;}
+  .skeleton::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.6),transparent);animation:shimmer 1.3s infinite;}
+  @keyframes shimmer{from{transform:translateX(-100%)}to{transform:translateX(100%)}}
+
+  /* modal */
+  .overlay{
+    position:fixed;inset:0;background:rgba(35,34,43,.55);
+    display:none;align-items:center;justify-content:center;padding:20px;z-index:50;
+    overflow-y:auto;
+  }
+  .overlay.show{display:flex;}
+  .ticket{
+    background:var(--card);width:100%;max-width:420px;
+    border-radius:var(--radius);position:relative;
+    box-shadow:0 30px 60px -20px rgba(0,0,0,.4);
+    margin:auto;
+  }
+  .ticket.wide{max-width:560px;}
+  .ticket-head{
+    padding:22px 24px 16px;border-bottom:2px dashed var(--line);
+    display:flex;justify-content:space-between;align-items:flex-start;gap:10px;
+  }
+  .ticket-head .eyebrow{margin-bottom:4px;}
+  .close-x{background:none;border:none;font-size:20px;cursor:pointer;color:var(--ink-soft);line-height:1;padding:4px;}
+  .ticket-body{padding:20px 24px 24px;display:flex;flex-direction:column;gap:14px;max-height:70vh;overflow-y:auto;}
+  .field label{font-size:12px;font-weight:600;color:var(--ink-soft);display:block;margin-bottom:6px;}
+  .field input, .field textarea, .field select{
+    width:100%;padding:11px 12px;border:1px solid var(--line);border-radius:var(--radius);
+    font-family:'Inter',sans-serif;font-size:14px;background:#fff;color:var(--ink);outline:none;
+  }
+  .field textarea{resize:vertical;min-height:70px;}
+  .field input:focus, .field textarea:focus, .field select:focus{border-color:var(--teal);}
+  .form-msg{font-size:13px;padding:10px 12px;border-radius:var(--radius);display:none;}
+  .form-msg.show{display:block;}
+  .form-msg.err{background:#f7e7e2;color:var(--danger);}
+  .form-msg.ok{background:#e9f1ef;color:var(--teal-deep);}
+
+  .admin-row{
+    display:flex;justify-content:space-between;align-items:center;gap:10px;
+    padding:12px 0;border-bottom:1px solid var(--line);
+  }
+  .admin-row:last-child{border-bottom:none;}
+  .admin-row-name{font-weight:600;font-size:14px;}
+  .admin-row-cat{font-size:11px;color:var(--ink-soft);font-family:'IBM Plex Mono',monospace;}
+  .admin-row-actions{display:flex;gap:6px;flex-shrink:0;}
+  .icon-btn{
+    border:1px solid var(--line);background:#fff;border-radius:var(--radius);
+    padding:6px 10px;font-size:12px;cursor:pointer;color:var(--ink-soft);
+  }
+  .icon-btn:hover{border-color:var(--teal);color:var(--ink);}
+  .icon-btn.danger:hover{border-color:var(--danger);color:var(--danger);}
+
+  footer{max-width:1100px;margin:0 auto;padding:0 32px 50px;color:var(--ink-soft);font-size:12px;}
+
+  @media(max-width:600px){
+    header{padding:34px 18px 22px;flex-direction:column;}
+    header h1{font-size:26px;}
+    main{padding:20px 18px 60px;}
+    .grid{grid-template-columns:1fr;}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <div class="eyebrow">Katalog &mdash; Produk Digital</div>
+    <h1>PORTOFOLIO DIGITAL</h1>
+    <p>Kumpulan berbagai produk digital yang sudah dibuat. Pilih produk untuk akses langsung dan klik daftar jika ingin belajar dan ada akses</p>
+  </div>
+  <button class="admin-link" id="openAdminBtn">&#9998; Kelola Produk</button>
+</header>
+
+<main>
+  <div class="toolbar">
+    <div class="search">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input id="searchInput" type="text" placeholder="Cari produk...">
+    </div>
+    <div id="chips" style="display:flex;gap:8px;flex-wrap:wrap;">
+      <div class="chip active" data-cat="__all">Semua</div>
+    </div>
+  </div>
+
+  <div id="grid" class="grid">
+    <div class="skeleton"></div>
+    <div class="skeleton"></div>
+    <div class="skeleton"></div>
+  </div>
+</main>
+
+<footer>Data produk &amp; pendaftaran tersimpan di Google Sheets.</footer>
+
+<!-- Modal pendaftaran -->
+<div class="overlay" id="overlay">
+  <div class="ticket">
+    <div class="ticket-head">
+      <div>
+        <div class="eyebrow">Tiket Pendaftaran</div>
+        <h3 id="ticketTitle" style="font-size:18px;">Nama Produk</h3>
+      </div>
+      <button class="close-x" data-close="overlay">&times;</button>
+    </div>
+    <div class="ticket-body">
+      <div class="form-msg" id="formMsg"></div>
+      <div class="field">
+        <label>Nama Lengkap</label>
+        <input type="text" id="fNama" placeholder="Nama kamu">
+      </div>
+      <div class="field">
+        <label>Email</label>
+        <input type="email" id="fEmail" placeholder="nama@email.com">
+      </div>
+      <div class="field">
+        <label>WhatsApp (opsional)</label>
+        <input type="text" id="fWa" placeholder="08xxxxxxxxxx">
+      </div>
+      <button class="btn btn-solid" id="submitBtn" style="width:100%;">Daftar Sekarang</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal admin: password + kelola -->
+<div class="overlay" id="adminOverlay">
+  <div class="ticket wide">
+    <div class="ticket-head">
+      <div>
+        <div class="eyebrow">Area Terbatas</div>
+        <h3 id="adminTitle" style="font-size:18px;">Kelola Produk</h3>
+      </div>
+      <button class="close-x" data-close="adminOverlay">&times;</button>
+    </div>
+    <div class="ticket-body" id="adminBody"></div>
+  </div>
+</div>
+
+<!-- Modal kode akses -->
+<div class="overlay" id="gateOverlay">
+  <div class="ticket">
+    <div class="ticket-head">
+      <div>
+        <div class="eyebrow">Tautan Terkunci</div>
+        <h3 id="gateTitle" style="font-size:18px;">Nama Produk</h3>
+      </div>
+      <button class="close-x" data-close="gateOverlay">&times;</button>
+    </div>
+    <div class="ticket-body">
+      <div class="form-msg" id="gateMsg"></div>
+      <div class="field">
+        <label>Kode Akses</label>
+        <input type="text" id="gateCodeInput" placeholder="Masukkan kode">
+      </div>
+      <button class="btn btn-solid" id="gateSubmitBtn" style="width:100%;">Buka Tautan</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// =====================================================================
+// GANTI URL DI BAWAH DENGAN URL WEB APP GOOGLE APPS SCRIPT KAMU
+// =====================================================================
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyWDElaWHSg9hUnyjaW8rsGiafmYLv5jLTm1kqK0yQSMLcNzcLxUQQ56_rMCjEQvTQP/exec";
+
+let allProducts = [];
+let adminProducts = [];
+let activeCategory = "__all";
+let activeQuery = "";
+let adminPassword = "";
+
+async function loadProducts(){
+  const grid = document.getElementById('grid');
+  if(SCRIPT_URL.includes("PASTE_URL")){
+    grid.innerHTML = `<div class="state" style="grid-column:1/-1;">
+      <h3>Belum terhubung ke Google Sheet</h3>
+      <p>Buka file <span class="mono">katalog-produk.html</span>, cari baris <span class="mono">SCRIPT_URL</span>, lalu tempel URL Web App Apps Script kamu di sana.</p>
+    </div>`;
+    return;
+  }
+  try{
+    const res = await fetch(SCRIPT_URL);
+    const json = await res.json();
+    if(!json.success) throw new Error(json.error || 'Gagal memuat data');
+    allProducts = json.data || [];
+    buildChips();
+    render();
+  }catch(err){
+    grid.innerHTML = `<div class="state" style="grid-column:1/-1;">
+      <h3>Data tidak bisa dimuat</h3>
+      <p>Periksa kembali URL Apps Script dan pastikan sheet "Produk" berisi data yang benar.</p>
+    </div>`;
+  }
+}
+
+function buildChips(){
+  const cats = [...new Set(allProducts.map(p => (p.Kategori||'').trim()).filter(Boolean))];
+  const wrap = document.getElementById('chips');
+  wrap.innerHTML = `<div class="chip active" data-cat="__all">Semua</div>` +
+    cats.map(c => `<div class="chip" data-cat="${c}">${c}</div>`).join('');
+  wrap.querySelectorAll('.chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+      wrap.querySelectorAll('.chip').forEach(c=>c.classList.remove('active'));
+      chip.classList.add('active');
+      activeCategory = chip.dataset.cat;
+      render();
+    });
+  });
+}
+
+function render(){
+  const grid = document.getElementById('grid');
+  let items = allProducts.filter(p => {
+    const matchCat = activeCategory === '__all' || (p.Kategori||'').trim() === activeCategory;
+    const matchQuery = !activeQuery || (p.Nama||'').toLowerCase().includes(activeQuery) || (p.Deskripsi||'').toLowerCase().includes(activeQuery);
+    return matchCat && matchQuery;
+  });
+
+  if(items.length === 0){
+    grid.innerHTML = `<div class="state" style="grid-column:1/-1;">
+      <h3>Tidak ada produk ditemukan</h3>
+      <p>Coba kata kunci lain, atau tambahkan produk baru lewat tombol "Kelola Produk".</p>
+    </div>`;
+    return;
+  }
+
+  grid.innerHTML = items.map((p, i) => {
+    const buka = String(p.Status||'').toLowerCase().includes('buka') || !p.Status;
+    return `
+    <div class="card">
+      <div class="card-top">
+        <span class="index-no">No. ${String(i+1).padStart(3,'0')}</span>
+        <span class="status ${buka ? 'open':'closed'}">${p.Status || 'Pendaftaran Dibuka'}</span>
+      </div>
+      ${p.Kategori ? `<span class="kategori">${p.Kategori}</span>` : ''}
+      <h3>${p.Nama || 'Tanpa nama'}</h3>
+      <p class="desc">${p.Deskripsi || ''}</p>
+      <div class="card-actions">
+        ${p.locked
+          ? `<button class="btn btn-ghost" onclick="openLinkGate('${p.ID}')">&#128274; Buka Tautan</button>`
+          : `<a class="btn btn-ghost" href="${p.Tautan || '#'}" target="_blank" rel="noopener">Buka Tautan</a>`
+        }
+        ${buka
+          ? `<button class="btn btn-solid" onclick="openModal('${(p.Nama||'').replace(/'/g,"\\'")}')">Daftar</button>`
+          : `<button class="btn btn-solid" disabled onclick="showClosedNotice()">Daftar</button>`
+        }
+      </div>
+    </div>`;
+  }).join('');
+}
+
+document.getElementById('searchInput').addEventListener('input', (e) => {
+  activeQuery = e.target.value.toLowerCase();
+  render();
+});
+
+// ---- close buttons ----
+document.querySelectorAll('[data-close]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.getElementById(btn.dataset.close).classList.remove('show');
+  });
+});
+document.getElementById('overlay').addEventListener('click', (e) => { if(e.target.id==='overlay') e.target.classList.remove('show'); });
+document.getElementById('adminOverlay').addEventListener('click', (e) => { if(e.target.id==='adminOverlay') e.target.classList.remove('show'); });
+document.getElementById('gateOverlay').addEventListener('click', (e) => { if(e.target.id==='gateOverlay') e.target.classList.remove('show'); });
+
+// ---- Modal pendaftaran ----
+const overlay = document.getElementById('overlay');
+let currentProduk = "";
+
+function showClosedNotice(){
+  let toast = document.getElementById('closedToast');
+  if(!toast){
+    toast = document.createElement('div');
+    toast.id = 'closedToast';
+    toast.style.cssText = `
+      position:fixed;left:50%;bottom:28px;transform:translateX(-50%) translateY(20px);
+      background:var(--ink);color:#fff;padding:12px 20px;border-radius:999px;
+      font-family:'Inter',sans-serif;font-size:13.5px;font-weight:600;
+      box-shadow:0 12px 30px -10px rgba(0,0,0,.4);opacity:0;transition:all .25s ease;
+      z-index:100;pointer-events:none;white-space:nowrap;
+    `;
+    toast.textContent = 'Tidak menerima pendaftaran';
+    document.body.appendChild(toast);
+  }
+  toast.style.opacity = '1';
+  toast.style.transform = 'translateX(-50%) translateY(0)';
+  clearTimeout(toast._t);
+  toast._t = setTimeout(() => {
+    toast.style.opacity = '0';
+    toast.style.transform = 'translateX(-50%) translateY(20px)';
+  }, 2200);
+}
+
+// ---- Modal kode akses (link terkunci, validasi di server) ----
+const gateOverlay = document.getElementById('gateOverlay');
+let gateProdukId = null;
+
+function openLinkGate(id){
+  gateProdukId = id;
+  const p = allProducts.find(x => x.ID === id);
+  document.getElementById('gateTitle').textContent = (p && p.Nama) || 'Tanpa nama';
+  document.getElementById('gateCodeInput').value = '';
+  const m = document.getElementById('gateMsg');
+  m.className = 'form-msg';
+  gateOverlay.classList.add('show');
+  setTimeout(() => document.getElementById('gateCodeInput').focus(), 50);
+}
+
+document.getElementById('gateSubmitBtn').addEventListener('click', async () => {
+  const input = document.getElementById('gateCodeInput').value.trim();
+  const m = document.getElementById('gateMsg');
+
+  if(!input){
+    m.textContent = 'Kode wajib diisi.';
+    m.className = 'form-msg show err';
+    return;
+  }
+
+  const btn = document.getElementById('gateSubmitBtn');
+  btn.disabled = true;
+  btn.textContent = 'Memeriksa...';
+
+  try{
+    const res = await fetch(SCRIPT_URL, {
+      method: 'POST',
+      headers: {'Content-Type': 'text/plain;charset=utf-8'},
+      body: JSON.stringify({ action:'bukaTautan', id: gateProdukId, kode: input })
+    });
+    const json = await res.json();
+    if(!json.success) throw new Error(json.error || 'Kode salah.');
+    gateOverlay.classList.remove('show');
+    window.open(json.tautan || '#', '_blank', 'noopener');
+  }catch(err){
+    m.textContent = err.message || 'Kode salah. Coba lagi.';
+    m.className = 'form-msg show err';
+  }finally{
+    btn.disabled = false;
+    btn.textContent = 'Buka Tautan';
+  }
+});
+document.getElementById('gateCodeInput').addEventListener('keydown', (e) => {
+  if(e.key === 'Enter') document.getElementById('gateSubmitBtn').click();
+});
+
+function openModal(nama){
+  const p = allProducts.find(x => x.Nama === nama);
+  const buka = !p || String(p.Status||'').toLowerCase().includes('buka') || !p.Status;
+  if(!buka){
+    showClosedNotice();
+    return;
+  }
+  currentProduk = nama;
+  document.getElementById('ticketTitle').textContent = nama;
+  document.getElementById('formMsg').className = 'form-msg';
+  document.getElementById('fNama').value = '';
+  document.getElementById('fEmail').value = '';
+  document.getElementById('fWa').value = '';
+  overlay.classList.add('show');
+}
+
+document.getElementById('submitBtn').addEventListener('click', async () => {
+  const nama = document.getElementById('fNama').value.trim();
+  const email = document.getElementById('fEmail').value.trim();
+  const wa = document.getElementById('fWa').value.trim();
+  const msg = document.getElementById('formMsg');
+
+  if(!nama || !email){
+    msg.textContent = 'Nama dan email wajib diisi.';
+    msg.className = 'form-msg show err';
+    return;
+  }
+
+  const btn = document.getElementById('submitBtn');
+  btn.disabled = true;
+  btn.textContent = 'Mengirim...';
+
+  try{
+    const res = await fetch(SCRIPT_URL, {
+      method: 'POST',
+      headers: {'Content-Type': 'text/plain;charset=utf-8'},
+      body: JSON.stringify({ action:'daftar', produk: currentProduk, nama, email, whatsapp: wa })
+    });
+    const json = await res.json();
+    if(!json.success) throw new Error(json.error || '');
+    msg.textContent = 'Pendaftaran berhasil dikirim. Terima kasih!';
+    msg.className = 'form-msg show ok';
+    setTimeout(() => overlay.classList.remove('show'), 1400);
+  }catch(err){
+    msg.textContent = err.message || 'Gagal mengirim pendaftaran. Coba lagi sebentar lagi.';
+    msg.className = 'form-msg show err';
+  }finally{
+    btn.disabled = false;
+    btn.textContent = 'Daftar Sekarang';
+  }
+});
+
+// ================= ADMIN =================
+const adminOverlay = document.getElementById('adminOverlay');
+const adminBody = document.getElementById('adminBody');
+const adminTitle = document.getElementById('adminTitle');
+
+document.getElementById('openAdminBtn').addEventListener('click', () => {
+  if(SCRIPT_URL.includes("PASTE_URL")){
+    alert('Hubungkan dulu ke Google Sheet (isi SCRIPT_URL) sebelum mengelola produk.');
+    return;
+  }
+  showPasswordScreen();
+  adminOverlay.classList.add('show');
+});
+
+function showPasswordScreen(){
+  adminTitle.textContent = 'Masuk sebagai Pengelola';
+  adminBody.innerHTML = `
+    <div class="form-msg" id="adminMsg"></div>
+    <div class="field">
+      <label>Password</label>
+      <input type="password" id="adminPassInput" placeholder="Masukkan password">
+    </div>
+    <button class="btn btn-solid" id="adminLoginBtn" style="width:100%;">Masuk</button>
+  `;
+  document.getElementById('adminLoginBtn').addEventListener('click', async () => {
+    const val = document.getElementById('adminPassInput').value;
+    const m = document.getElementById('adminMsg');
+    if(!val){
+      m.textContent = 'Password wajib diisi.';
+      m.className = 'form-msg show err';
+      return;
+    }
+    const btn = document.getElementById('adminLoginBtn');
+    btn.disabled = true;
+    btn.textContent = 'Memeriksa...';
+    try{
+      const res = await fetch(SCRIPT_URL, {
+        method: 'POST',
+        headers: {'Content-Type': 'text/plain;charset=utf-8'},
+        body: JSON.stringify({ action:'daftarAdmin', password: val })
+      });
+      const json = await res.json();
+      if(!json.success) throw new Error(json.error || 'Password salah.');
+      adminPassword = val;
+      adminProducts = json.data || [];
+      showAdminList();
+    }catch(err){
+      m.textContent = err.message || 'Password salah.';
+      m.className = 'form-msg show err';
+      btn.disabled = false;
+      btn.textContent = 'Masuk';
+    }
+  });
+  document.getElementById('adminPassInput').addEventListener('keydown', (e) => {
+    if(e.key === 'Enter') document.getElementById('adminLoginBtn').click();
+  });
+}
+
+function showAdminList(){
+  adminTitle.textContent = 'Kelola Produk';
+  const rows = adminProducts.map(p => `
+    <div class="admin-row">
+      <div>
+        <div class="admin-row-name">${p.Nama || 'Tanpa nama'} ${String(p.KodeAkses || '').trim() ? '&#128274;' : ''}</div>
+        <div class="admin-row-cat">${p.Kategori || '-'} &middot; ${p.Status || ''}</div>
+      </div>
+      <div class="admin-row-actions">
+        <button class="icon-btn" onclick="showProductForm('${p.ID}')">Ubah</button>
+        <button class="icon-btn danger" onclick="handleDelete('${p.ID}')">Hapus</button>
+      </div>
+    </div>
+  `).join('') || `<p style="color:var(--ink-soft);font-size:13px;">Belum ada produk.</p>`;
+
+  adminBody.innerHTML = `
+    <div class="form-msg" id="adminMsg"></div>
+    <button class="btn btn-ghost" onclick="showProductForm()" style="width:100%;">+ Tambah Produk Baru</button>
+    <div>${rows}</div>
+  `;
+}
+
+function showProductForm(id){
+  const p = id ? adminProducts.find(x => x.ID === id) : null;
+  adminTitle.textContent = p ? 'Ubah Produk' : 'Tambah Produk';
+  adminBody.innerHTML = `
+    <div class="form-msg" id="adminMsg"></div>
+    <div class="field"><label>Nama Produk</label><input type="text" id="pNama" value="${p ? p.Nama.replace(/"/g,'&quot;') : ''}"></div>
+    <div class="field"><label>Deskripsi</label><textarea id="pDesk">${p ? p.Deskripsi : ''}</textarea></div>
+    <div class="field"><label>Tautan Akses</label><input type="text" id="pTautan" value="${p ? p.Tautan : ''}" placeholder="https://..."></div>
+    <div class="field"><label>Kategori</label><input type="text" id="pKategori" value="${p ? p.Kategori : ''}" placeholder="Aplikasi, Template, dll"></div>
+    <div class="field">
+      <label>Status</label>
+      <select id="pStatus">
+        <option value="Pendaftaran Dibuka" ${p && p.Status==='Pendaftaran Dibuka' ? 'selected':''}>Pendaftaran Dibuka</option>
+        <option value="Ditutup" ${p && p.Status==='Ditutup' ? 'selected':''}>Ditutup</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>Kode Akses (opsional)</label>
+      <input type="text" id="pKode" value="${p && p.KodeAkses ? String(p.KodeAkses).replace(/"/g,'&quot;') : ''}" placeholder="Kosongkan jika tautan boleh dibuka bebas">
+    </div>
+    <div style="display:flex;gap:8px;">
+      <button class="btn btn-ghost" onclick="showAdminList()">Batal</button>
+      <button class="btn btn-solid" id="saveProductBtn">${p ? 'Simpan Perubahan' : 'Tambah Produk'}</button>
+    </div>
+  `;
+  document.getElementById('saveProductBtn').addEventListener('click', () => saveProduct(p ? p.ID : null));
+}
+
+async function saveProduct(id){
+  const nama = document.getElementById('pNama').value.trim();
+  const deskripsi = document.getElementById('pDesk').value.trim();
+  const tautan = document.getElementById('pTautan').value.trim();
+  const kategori = document.getElementById('pKategori').value.trim();
+  const status = document.getElementById('pStatus').value;
+  const kodeAkses = document.getElementById('pKode').value.trim();
+  const msg = document.getElementById('adminMsg');
+
+  if(!nama){
+    msg.textContent = 'Nama produk wajib diisi.';
+    msg.className = 'form-msg show err';
+    return;
+  }
+
+  const btn = document.getElementById('saveProductBtn');
+  btn.disabled = true;
+
+  try{
+    const res = await fetch(SCRIPT_URL, {
+      method: 'POST',
+      headers: {'Content-Type': 'text/plain;charset=utf-8'},
+      body: JSON.stringify({
+        action: id ? 'ubah' : 'tambah',
+        password: adminPassword,
+        id, nama, deskripsi, tautan, kategori, status, kodeAkses
+      })
+    });
+    const json = await res.json();
+    if(!json.success) throw new Error(json.error || 'Gagal menyimpan.');
+    await refreshAdminProducts();
+    await loadProducts();
+    showAdminList();
+  }catch(err){
+    msg.textContent = err.message || 'Gagal menyimpan. Periksa password kamu.';
+    msg.className = 'form-msg show err';
+    btn.disabled = false;
+  }
+}
+
+async function refreshAdminProducts(){
+  const res = await fetch(SCRIPT_URL, {
+    method: 'POST',
+    headers: {'Content-Type': 'text/plain;charset=utf-8'},
+    body: JSON.stringify({ action:'daftarAdmin', password: adminPassword })
+  });
+  const json = await res.json();
+  if(json.success) adminProducts = json.data || [];
+}
+
+async function handleDelete(id){
+  const p = adminProducts.find(x => x.ID === id);
+  if(!confirm(`Hapus produk "${p ? p.Nama : ''}"? Tindakan ini tidak bisa dibatalkan.`)) return;
+
+  try{
+    const res = await fetch(SCRIPT_URL, {
+      method: 'POST',
+      headers: {'Content-Type': 'text/plain;charset=utf-8'},
+      body: JSON.stringify({ action:'hapus', password: adminPassword, id })
+    });
+    const json = await res.json();
+    if(!json.success) throw new Error(json.error || 'Gagal menghapus.');
+    await refreshAdminProducts();
+    await loadProducts();
+    showAdminList();
+  }catch(err){
+    alert(err.message || 'Gagal menghapus. Periksa password kamu.');
+  }
+}
+
+loadProducts();
+</script>
+</body>
+</html>
